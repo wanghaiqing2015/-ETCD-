@@ -159,5 +159,5 @@ chmod 666 /opt/cfssl/*
 
 # 打包证书
 cd /opt
-tar zcvf cfssl.tar.gz /opt/cfssl
+tar zcvf cfssl.tar.gz cfssl/
   

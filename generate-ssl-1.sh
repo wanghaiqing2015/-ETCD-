@@ -89,7 +89,10 @@ echo '{"CN":"member1","hosts":["192.168.31.243","192.168.31.244","192.168.31.245
 # 生成客户端证书
 echo '{"CN":"client","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client - | cfssljson -bare client
  
+# 设置证书权限
 chmod 666 /opt/cfssl/*
+
+# 打包证书
 cd /opt
-tar zcvf cfssl.tar.gz /opt/cfssl
+tar zcvf cfssl.tar.gz cfssl/
   
