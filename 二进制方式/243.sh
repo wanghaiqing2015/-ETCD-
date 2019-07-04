@@ -51,6 +51,8 @@ ETCD_PEER_TRUSTED_CA_FILE="/opt/cfssl/ca.pem"
 ETCD_PEER_CLIENT_CERT_AUTH="true"
 EOF
 
+exit 0
+
 # 注备好之后，三台机器要同时启动服务才行
 systemctl restart etcd
 systemctl status  etcd
