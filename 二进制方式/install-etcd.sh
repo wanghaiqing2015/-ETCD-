@@ -60,6 +60,10 @@ if [ "$#" == 0 ]; then
     exit 1
 fi
 
+# ntpdate 时间同步
+yum install ntp -y
+ntpdate time1.aliyun.com
+
 # 关闭防火墙
 systemctl stop firewalld
 systemctl disable firewalld
