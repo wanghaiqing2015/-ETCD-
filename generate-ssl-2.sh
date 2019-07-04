@@ -59,37 +59,105 @@ EOF
 
 cat > ca-csr.json <<EOF
 {
-    "CN": "My own CA",
+    "CN": "Self Signed Ca",
     "key": {
         "algo": "rsa",
         "size": 2048
     },
     "names": [
         {
-            "C": "US",
-            "L": "CA",
-            "O": "My Company Name",
-            "ST": "San Francisco",
-            "OU": "Org Unit 1",
-            "OU": "Org Unit 2"
+            "C": "CN",
+            "L": "SH",
+            "O": "Netease",
+            "ST": "SH",            
+            "OU": "OT"
+        }    ]
+}
+EOF
+
+# 生成CA证书和私钥
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
+
+# 生成服务器端证书
+cfssl print-defaults csr > server.json
+cat > ca-csr.json <<EOF
+{
+    "CN": "Server",
+    "hosts": [
+        "192.168.31.243",
+        "192.168.31.244",
+        "192.168.31.245"
+       ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "CN",
+            "L": "SH",
+            "ST": "SH"
         }
     ]
 }
 EOF
-
-# 生成 CA 证书
-cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
-
-# 生成服务器端证书
-echo '{"CN":"coreos1","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server -hostname="192.168.31.243,192.168.31.244,192.168.31.245,127.0.0.1,server" - | cfssljson -bare server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
 
 # 生成对等证书
-echo '{"CN":"member1","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer -hostname="192.168.31.243,192.168.31.244,192.168.31.245,127.0.0.1,server,member1" - | cfssljson -bare member1
+cfssl print-defaults csr > member1.json
+cat > ca-csr.json <<EOF
+{
+    "CN": "member1",
+    "hosts": [
+        "192.168.31.243",
+        "192.168.31.244",
+        "192.168.31.245"
+    ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "CN",
+            "L": "SH",
+            "ST": "SH"
+        }
+    ]
+}
+EOF
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer member1.json | cfssljson -bare member1
 
 # 生成客户端证书
-echo '{"CN":"client","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client - | cfssljson -bare client
- 
+cfssl print-defaults csr > client.json
+cat > ca-csr.json <<EOF
+{
+    "CN": "Client",
+    "hosts": [],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "CN",
+            "L": "SH",
+            "ST": "SH"
+        }
+    ]
+}
+EOF
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
+
+# 最后校验证书
+openssl x509 -in ca.pem -text -noout
+openssl x509 -in server.pem -text -noout
+openssl x509 -in client.pem -text -noout
+
+# 设置证书权限
 chmod 666 /opt/cfssl/*
+
+# 打包证书
 cd /opt
 tar zcvf cfssl.tar.gz /opt/cfssl
   
