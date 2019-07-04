@@ -150,9 +150,9 @@ EOF
 cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
 
 # 最后校验证书
-openssl x509 -in ca.pem -text -noout
-openssl x509 -in server.pem -text -noout
-openssl x509 -in client.pem -text -noout
+# openssl x509 -in ca.pem -text -noout
+# openssl x509 -in server.pem -text -noout
+# openssl x509 -in client.pem -text -noout
 
 # 设置证书权限
 chmod 666 /opt/cfssl/*
