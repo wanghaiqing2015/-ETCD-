@@ -98,8 +98,8 @@ exit 0
 
 # 注备好之后，三台机器要同时启动服务才行
 systemctl restart etcd
-systemctl status  etcd
 systemctl enable  etcd
+systemctl status  etcd
 
 export ETCDCTL_API=3   
 etcdctl --endpoints=https://192.168.31.243:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem member list
