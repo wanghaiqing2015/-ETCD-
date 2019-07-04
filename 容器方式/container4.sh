@@ -5,14 +5,17 @@ systemctl disable firewalld
 sed -i -e  's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
 setenforce 0
 
+# 安装docker
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 systemctl start docker && systemctl enable docker
+
+# 下载镜像
 docker pull quay.io/coreos/etcd:v3.3.13
 
-docker rm -f etcd
+# 解压证书
 tar zxvf cfssl.tar.gz -C /opt/
  
-# For each machine
+# 设置全局变量
 ETCD_VERSION=v3.3.13
 TOKEN=my-etcd-token
 CLUSTER_STATE=new
@@ -92,6 +95,8 @@ sudo docker run \
     --peer-key-file /opt/cfssl/member1-key.pem \
     --peer-trusted-ca-file /opt/cfssl/ca.pem \
     --initial-cluster-state ${CLUSTER_STATE} --initial-cluster-token ${TOKEN}
+
+exit 0
     
 docker exec etcd /bin/sh -c "export ETCDCTL_API=3 && /usr/local/bin/etcdctl --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem --endpoints=https://192.168.31.243:2379 member list"
 
