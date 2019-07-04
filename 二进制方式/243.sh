@@ -6,15 +6,18 @@ sed -i -e  's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
 setenforce 0
 
 # 更新源
-rm -rf /etc/yum.repos.d/*
-curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
- 
-tar zxvf cfssl.tar.gz -C /opt/
+# rm -rf /etc/yum.repos.d/*
+# curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+# curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
 
 # 安装etcd
-yum install etcd -y
+# yum install etcd -y
+rpm -ivh etcd-3.3.11-2.el7.centos.x86_64.rpm
 
+# 解压证书
+tar zxvf cfssl.tar.gz -C /opt/
+
+# 删除存储目录
 rm -rf /var/lib/etcd/default.etcd/*
 
 cat > /etc/etcd/etcd.conf <<EOF
