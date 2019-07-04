@@ -46,6 +46,8 @@ ETCD_PEER_KEY_FILE="/opt/cfssl/member1-key.pem"
 ETCD_PEER_TRUSTED_CA_FILE="/opt/cfssl/ca.pem"
 ETCD_PEER_CLIENT_CERT_AUTH="true"
 EOF
+
+echo -e "\033[42;37;1m配置$1完成\033[0m"
 }
 
 
