@@ -1,3 +1,7 @@
+#
+# 搭建ETCD三节点集群
+#
+
 function set_etcd_conf(){
 if [ "$1" == etcd1 ]; then
     THIS_NAME=etcd1
@@ -50,7 +54,7 @@ EOF
 echo -e "\033[42;37;1m配置$1完成\033[0m"
 }
 
-
+# 没有输入参数，报错
 if [ "$#" == 0 ]; then
     echo -e "\033[41;37;1m请输入参数，比如etcd1、etcd2、etcd3\033[0m"
     exit 1
@@ -80,9 +84,8 @@ tar zxvf cfssl.tar.gz -C /opt/
 
 # 删除存储目录
 rm -rf /var/lib/etcd/default.etcd/*
-
  
-# For each machine
+# 设置全局变量
 export CLUSTER_STATE=new
 export NAME_1=etcd1
 export NAME_2=etcd2
@@ -92,6 +95,7 @@ export HOST_2=192.168.31.244
 export HOST_3=192.168.31.245
 export CLUSTER=${NAME_1}=https://${HOST_1}:2380,${NAME_2}=https://${HOST_2}:2380,${NAME_3}=https://${HOST_3}:2380
  
+# 修改配置文件
 set_etcd_conf $1
 
 exit 0
@@ -111,6 +115,4 @@ etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,http
 etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint health
 etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint status
 etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem version
-
-exit 0
  
