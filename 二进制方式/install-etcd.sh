@@ -108,6 +108,7 @@ set_etcd_conf $*
 exit 0
 
 # 注备好之后，三台机器要同时启动服务才行
+systemctl stop etcd
 systemctl restart etcd
 systemctl enable  etcd
 systemctl status  etcd
