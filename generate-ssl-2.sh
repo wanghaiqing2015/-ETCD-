@@ -135,7 +135,11 @@ cfssl print-defaults csr > client.json
 cat > ca-csr.json <<EOF
 {
     "CN": "Client",
-    "hosts": [],
+    "hosts": [
+        "192.168.31.200",
+        "192.168.31.243",
+        "192.168.31.246"
+       ],
     "key": {
         "algo": "ecdsa",
         "size": 256

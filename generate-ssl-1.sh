@@ -8,8 +8,10 @@
 which cfssl
 if [ "$?" == 1 ]; then
     echo 正在下载cfssl签名工具
-    curl -fLo /usr/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
-    curl -fLo /usr/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+    # curl -fLo /usr/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+    # curl -fLo /usr/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+    /bin/cp -f cfssl_linux-amd64 /usr/bin/cfssl
+    /bin/cp -f cfssljson_linux-amd64 /usr/bin/cfssljson
     chmod +x /usr/bin/{cfssl,cfssljson}
 fi
 
@@ -81,13 +83,13 @@ EOF
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
 
 # 生成服务器端证书
-echo '{"CN":"coreos1","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server -hostname="192.168.31.243,192.168.31.244,192.168.31.245,127.0.0.1,server" - | cfssljson -bare server
+echo '{"CN":"coreos1","hosts":["192.168.31.200","192.168.31.243","192.168.31.246","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server -hostname="192.168.31.200,192.168.31.243,192.168.31.246,127.0.0.1,server" - | cfssljson -bare server
 
 # 生成对等证书
-echo '{"CN":"member1","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer -hostname="192.168.31.243,192.168.31.244,192.168.31.245,127.0.0.1,server,member1" - | cfssljson -bare member1
+echo '{"CN":"member1","hosts":["192.168.31.200","192.168.31.243","192.168.31.246","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer -hostname="192.168.31.200,192.168.31.243,192.168.31.246,127.0.0.1,server,member1" - | cfssljson -bare member1
 
 # 生成客户端证书
-echo '{"CN":"client","hosts":["192.168.31.243","192.168.31.244","192.168.31.245","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client - | cfssljson -bare client
+echo '{"CN":"client","hosts":["192.168.31.200","192.168.31.243","192.168.31.246","127.0.0.1"],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client - | cfssljson -bare client
  
 # 设置证书权限
 chmod 666 /opt/cfssl/*
