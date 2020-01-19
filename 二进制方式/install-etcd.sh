@@ -94,9 +94,9 @@ export CLUSTER_STATE=new
 export NAME_1=etcd1
 export NAME_2=etcd2
 export NAME_3=etcd3
-export HOST_1=192.168.31.243
-export HOST_2=192.168.31.244
-export HOST_3=192.168.31.245
+export HOST_1=192.168.31.200
+export HOST_2=192.168.31.243
+export HOST_3=192.168.31.246
 export CLUSTER=${NAME_1}=https://${HOST_1}:2380,${NAME_2}=https://${HOST_2}:2380,${NAME_3}=https://${HOST_3}:2380
  
 # 修改配置文件
@@ -110,13 +110,13 @@ systemctl enable  etcd
 systemctl status  etcd
 
 export ETCDCTL_API=3   
-etcdctl --endpoints=https://192.168.31.243:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem member list
-etcdctl --endpoints=https://192.168.31.243:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint health
-etcdctl --endpoints=https://192.168.31.243:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint status
-etcdctl --endpoints=https://192.168.31.243:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem version
+etcdctl --endpoints=https://192.168.31.200:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem member list
+etcdctl --endpoints=https://192.168.31.200:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint health
+etcdctl --endpoints=https://192.168.31.200:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint status
+etcdctl --endpoints=https://192.168.31.200:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem version
 
-etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem member list
-etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint health
-etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint status
-etcdctl --endpoints=https://192.168.31.243:2379,https://192.168.31.244:2379,https://192.168.31.245:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem version
+etcdctl --endpoints=https://192.168.31.200:2379,https://192.168.31.243:2379,https://192.168.31.246:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem member list
+etcdctl --endpoints=https://192.168.31.200:2379,https://192.168.31.243:2379,https://192.168.31.246:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint health
+etcdctl --endpoints=https://192.168.31.200:2379,https://192.168.31.243:2379,https://192.168.31.246:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem endpoint status
+etcdctl --endpoints=https://192.168.31.200:2379,https://192.168.31.243:2379,https://192.168.31.246:2379 --cacert=/opt/cfssl/ca.pem --cert=/opt/cfssl/client.pem --key=/opt/cfssl/client-key.pem version
  
