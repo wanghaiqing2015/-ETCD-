@@ -8,8 +8,10 @@
 which cfssl
 if [ "$?" == 1 ]; then
     echo 正在下载cfssl签名工具
-    curl -fLo /usr/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
-    curl -fLo /usr/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+    # curl -fLo /usr/bin/cfssl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+    # curl -fLo /usr/bin/cfssljson https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+    /bin/cp -f cfssl_linux-amd64 /usr/bin/cfssl
+    /bin/cp -f cfssljson_linux-amd64 /usr/bin/cfssljson
     chmod +x /usr/bin/{cfssl,cfssljson}
 fi
 
@@ -84,9 +86,9 @@ cat > ca-csr.json <<EOF
 {
     "CN": "Server",
     "hosts": [
+        "192.168.31.200",
         "192.168.31.243",
-        "192.168.31.244",
-        "192.168.31.245"
+        "192.168.31.246"
        ],
     "key": {
         "algo": "ecdsa",
@@ -109,9 +111,9 @@ cat > ca-csr.json <<EOF
 {
     "CN": "member1",
     "hosts": [
+        "192.168.31.200",
         "192.168.31.243",
-        "192.168.31.244",
-        "192.168.31.245"
+        "192.168.31.246"
     ],
     "key": {
         "algo": "ecdsa",

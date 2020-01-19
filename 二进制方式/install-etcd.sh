@@ -4,17 +4,14 @@
 
 function set_etcd_conf(){
 if [ "$1" == etcd1 ]; then
-    THIS_NAME=etcd1
-    THIS_IP=${HOST_1}
-    echo -e "\033[42;37;1m开始配置$1\033[0m"
+    export THIS_NAME=etcd1
+    export THIS_IP=${HOST_1}
 elif [ "$1" == etcd2 ]; then
-    THIS_NAME=etcd2
-    THIS_IP=${HOST_2}
-    echo -e "\033[42;37;1m开始配置$1\033[0m"
+    export THIS_NAME=etcd2
+    export THIS_IP=${HOST_2}
 elif [ "$1" == etcd3 ]; then
-    THIS_NAME=etcd3
-    THIS_IP=${HOST_3}
-    echo -e "\033[42;37;1m开始配置$1\033[0m"
+    export THIS_NAME=etcd3
+    export THIS_IP=${HOST_3}
 else
     echo -e "\033[41;37;1m参数不对，请确认，比如etcd1、etcd2、etcd3\033[0m"
     return 1
@@ -54,14 +51,25 @@ EOF
 echo -e "\033[42;37;1m配置$1完成\033[0m"
 }
 
-# 没有输入参数，报错
-if [ "$#" == 0 ]; then
-    echo -e "\033[41;37;1m请输入参数，比如etcd1、etcd2、etcd3\033[0m"
-    exit 1
+# 检查输入参数
+if [ "$1" == etcd1 ]; then
+    echo -e "\033[42;37;1m开始配置$1\033[0m"
+elif [ "$1" == etcd2 ]; then
+    echo -e "\033[42;37;1m开始配置$1\033[0m"
+elif [ "$1" == etcd3 ]; then
+    echo -e "\033[42;37;1m开始配置$1\033[0m"
+else
+    echo -e "\033[41;37;1m参数不对，请确认，比如etcd1、etcd2、etcd3\033[0m"
+    return 1
 fi
 
+# 更新源
+# rm -rf /etc/yum.repos.d/*
+# curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+# curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
+
 # ntpdate 时间同步
-yum install ntp -y
+# yum install ntpdate -y
 ntpdate time1.aliyun.com
 
 # 关闭防火墙
@@ -70,11 +78,6 @@ systemctl disable firewalld
 sed -i -e  's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
 setenforce 0
 
-# 更新源
-# rm -rf /etc/yum.repos.d/*
-# curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-# curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
-
 # 安装etcd
 which etcd
 if [ "$?" == 1 ]; then
@@ -82,8 +85,8 @@ if [ "$?" == 1 ]; then
     rpm -ivh etcd-3.3.11-2.el7.centos.x86_64.rpm
 fi
 
-
 # 解压证书
+rm -rf /opt/cfssl
 tar zxvf cfssl.tar.gz -C /opt/
 
 # 删除存储目录
@@ -98,9 +101,9 @@ export HOST_1=192.168.31.200
 export HOST_2=192.168.31.243
 export HOST_3=192.168.31.246
 export CLUSTER=${NAME_1}=https://${HOST_1}:2380,${NAME_2}=https://${HOST_2}:2380,${NAME_3}=https://${HOST_3}:2380
- 
+
 # 修改配置文件
-set_etcd_conf $1
+set_etcd_conf $*
 
 exit 0
 
