@@ -64,12 +64,12 @@ else
 fi
 
 # 更新源
-# rm -rf /etc/yum.repos.d/*
-# curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-# curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
+rm -rf /etc/yum.repos.d/*
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
 
 # ntpdate 时间同步
-# yum install ntpdate -y
+yum install ntpdate -y
 ntpdate time1.aliyun.com
 
 # 关闭防火墙
